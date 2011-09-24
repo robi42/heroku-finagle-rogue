@@ -1,0 +1,5 @@
+# Obtain from: `$ heroku config` -> `MONGOLAB_URI`
+mongo.host = dbh30.mongolab.com
+mongo.port = 27307
+mongo.db   = heroku_app1234567
+mongo.pw   =

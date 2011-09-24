@@ -1,0 +1,4 @@
+basicauth.user = admin
+basicauth.sha1 = E5E9FA1BA31ECD1AE84F75CAAA474F3A663F05F4
+# == 'secret'; please change if applicable. ;)
+mongo.db = finagletinker
