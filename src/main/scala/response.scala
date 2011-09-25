@@ -12,14 +12,14 @@ object Responses {
 
   def json(data: String) = {
     val response = status(OK)
-    response.setHeader("Content-Type", "application/json")
+    response.setHeader("Content-Type", "application/json; charset=utf-8")
     response setContent content(data)
     response
   }
 
   def error(info: String) = {
     val response = status(INTERNAL_SERVER_ERROR)
-    response.setHeader("Content-Type", "text/plain")
+    response.setHeader("Content-Type", "text/plain; charset=urf-8")
     response setContent content(info)
     response
   }
