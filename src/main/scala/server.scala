@@ -1,5 +1,6 @@
 package com.robert42.ft
 
+import Requests._
 import java.net.InetSocketAddress
 import java.util.{NoSuchElementException => NoSuchElement}
 import org.jboss.netty.handler.codec.http._
@@ -43,32 +44,32 @@ object RestServer extends Logger {
    */
   class Respond extends Service[HttpRequest, HttpResponse] with Logger {
     def apply(httpRequest: HttpRequest) = {
+      val request = Request(httpRequest)
       try {
-        val request = Request(httpRequest)
         request.method -> Path(request.path) match {
           case GET -> Root / "todos" => {
             val data = Todos.allAsJson
             debug("Data: %s" format data)
-            Future value Responses.json(data)
+            Future value Responses.json(data, acceptsGzip(request))
           }
           case GET -> Root / "todos" / id => {
             val todo = Todos get id
             val data = todo.toJson
             debug("Data: %s" format data)
-            Future value Responses.json(data)
+            Future value Responses.json(data, acceptsGzip(request))
           }
           case POST -> Root / "todos" => {
             val content = request.getContent.toString(UTF_8)
             val todo    = Todos.fromJson(content, create = true)
             val data    = todo.toJson
-            Future value Responses.json(data)
+            Future value Responses.json(data, acceptsGzip(request))
           }
           case PUT -> Root / "todos" / id => {
             val content = request.getContent.toString(UTF_8)
             val todo    = Todos.fromJson(content, update = true)
             val data    = todo.toJson
             debug("Data: %s" format data)
-            Future value Responses.json(data)
+            Future value Responses.json(data, acceptsGzip(request))
           }
           case DELETE -> Root / "todos" / id => {
             Todos remove id
@@ -81,7 +82,7 @@ object RestServer extends Logger {
       } catch {
         case e: NoSuchElement => Future value Responses.status(NOT_FOUND)
         case e: Exception => {
-          Future value Responses.error(e.getMessage)
+          Future value Responses.error(e.getMessage, acceptsGzip(request))
           throw e
         }
       }
