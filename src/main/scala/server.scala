@@ -45,31 +45,32 @@ object RestServer extends Logger {
   class Respond extends Service[HttpRequest, HttpResponse] with Logger {
     def apply(httpRequest: HttpRequest) = {
       val request = Request(httpRequest)
+      val gzip    = acceptsGzip(request)
       try {
         request.method -> Path(request.path) match {
           case GET -> Root / "todos" => {
             val data = Todos.allAsJson
             debug("Data: %s" format data)
-            Future value Responses.json(data, acceptsGzip(request))
+            Future value Responses.json(data, gzip)
           }
           case GET -> Root / "todos" / id => {
             val todo = Todos get id
             val data = todo.toJson
             debug("Data: %s" format data)
-            Future value Responses.json(data, acceptsGzip(request))
+            Future value Responses.json(data, gzip)
           }
           case POST -> Root / "todos" => {
             val content = request.getContent.toString(UTF_8)
             val todo    = Todos.fromJson(content, create = true)
             val data    = todo.toJson
-            Future value Responses.json(data, acceptsGzip(request))
+            Future value Responses.json(data, gzip)
           }
           case PUT -> Root / "todos" / id => {
             val content = request.getContent.toString(UTF_8)
             val todo    = Todos.fromJson(content, update = true)
             val data    = todo.toJson
             debug("Data: %s" format data)
-            Future value Responses.json(data, acceptsGzip(request))
+            Future value Responses.json(data, gzip)
           }
           case DELETE -> Root / "todos" / id => {
             Todos remove id
@@ -82,7 +83,7 @@ object RestServer extends Logger {
       } catch {
         case e: NoSuchElement => Future value Responses.status(NOT_FOUND)
         case e: Exception => {
-          Future value Responses.error(e.getMessage, acceptsGzip(request))
+          Future value Responses.error(e.getMessage, gzip)
           throw e
         }
       }
