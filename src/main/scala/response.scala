@@ -1,7 +1,8 @@
 package com.robert42.ft
 
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse
-import org.jboss.netty.handler.codec.http.{HttpHeaders => Headers, HttpResponseStatus => Status}
+import org.jboss.netty.handler.codec.http.
+  {HttpHeaders => Headers, HttpResponseStatus => Status}
 import org.jboss.netty.handler.codec.http.HttpHeaders.Names._
 import org.jboss.netty.handler.codec.http.HttpHeaders.Values._
 import org.jboss.netty.handler.codec.http.HttpResponseStatus._
@@ -38,10 +39,10 @@ object Responses {
 
   def content(data: String, gzip: Boolean = false) = {
     if (gzip) {
-      val bytes = new ByteArrayOutputStream
-      val gzip  = new GZIPOutputStream(bytes)
-      gzip write data.getBytes(UTF_8)
-      gzip.finish
+      val bytes   = new ByteArrayOutputStream
+      val gzipper = new GZIPOutputStream(bytes)
+      gzipper write data.getBytes(UTF_8)
+      gzipper.finish
       copiedBuffer(bytes.toByteArray)
     } else copiedBuffer(data, UTF_8)
   }
