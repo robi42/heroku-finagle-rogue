@@ -45,46 +45,47 @@ object RestServer extends Logger {
   class Respond extends Service[HttpRequest, HttpResponse] with Logger {
     def apply(httpRequest: HttpRequest) = {
       val request = Request(httpRequest)
-      val gzip    = acceptsGzip(request)
       try {
         request.method -> Path(request.path) match {
-          case GET -> Root / "todos" => {
+          case GET -> Root / "todos" => Future.value {
             val data = Todos.allAsJson
-            debug("Data: %s" format data)
-            Future value Responses.json(data, gzip)
+            debug("data: %s" format data)
+            Responses.json(data, acceptsGzip(request))
           }
-          case GET -> Root / "todos" / id => {
+          case GET -> Root / "todos" / id => Future.value {
             val todo = Todos get id
             val data = todo.toJson
-            debug("Data: %s" format data)
-            Future value Responses.json(data, gzip)
+            debug("data: %s" format data)
+            Responses.json(data, acceptsGzip(request))
           }
-          case POST -> Root / "todos" => {
+          case POST -> Root / "todos" => Future.value {
             val content = request.getContent.toString(UTF_8)
             val todo    = Todos.fromJson(content, create = true)
             val data    = todo.toJson
-            Future value Responses.json(data, gzip)
+            Responses.json(data, acceptsGzip(request))
           }
-          case PUT -> Root / "todos" / id => {
+          case PUT -> Root / "todos" / id => Future.value {
             val content = request.getContent.toString(UTF_8)
             val todo    = Todos.fromJson(content, update = true)
             val data    = todo.toJson
-            debug("Data: %s" format data)
-            Future value Responses.json(data, gzip)
+            debug("data: %s" format data)
+            Responses.json(data, acceptsGzip(request))
           }
-          case DELETE -> Root / "todos" / id => {
+          case DELETE -> Root / "todos" / id => Future.value {
             Todos remove id
-            debug("Data: %s" format id)
-            Future value Responses.status(OK)
+            debug("data: %s" format id)
+            Responses.status(OK)
           }
           case _ =>
             Future value Responses.status(NOT_FOUND)
         }
       } catch {
         case e: NoSuchElement => Future value Responses.status(NOT_FOUND)
-        case e: Exception => {
-          Future value Responses.error(e.getMessage, gzip)
-          throw e
+        case e: Exception => Future.value {
+          val message = Option(e.getMessage) getOrElse "Something went wrong."
+          error("message: %s - stack trace: %s"
+            .format(message, e.getStackTraceString))
+          Responses.error(message, acceptsGzip(request))
         }
       }
     }

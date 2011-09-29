@@ -25,7 +25,7 @@ object Todos extends Storable {
       .order(data.order)
       .done(data.done)
       .save
-    debug("Record: %s" format record)
+    debug("record: %s" format record)
     record
   }
 
@@ -35,7 +35,7 @@ object Todos extends Storable {
       (_.done setTo data.done) and
       (_.modifiedAt setTo Calendar.getInstance)
     val record = modify.updateOne(returnNew = true).get
-    debug("Record: %s" format record)
+    debug("record: %s" format record)
     record
   }
 
@@ -52,7 +52,7 @@ object Todos extends Storable {
       .order((data \ OrderElem.toString).text.toInt)
       .done((data \ DoneElem.toString).text.toBoolean)
       .save
-    debug("Record: %s" format record)
+    debug("record: %s" format record)
     record
   }
 
@@ -63,33 +63,33 @@ object Todos extends Storable {
       (_.done setTo (data \ DoneElem.toString).text.toBoolean) and
       (_.modifiedAt setTo Calendar.getInstance)
     val record = modify.updateOne(returnNew = true).get
-    debug("Record: %s" format record)
+    debug("record: %s" format record)
     record
   }
 
   def get(id: String) = {
     val query  = Todo where (_.id eqs new ObjectId(id)) get
     val record = query.get
-    debug("Record: %s" format record)
+    debug("record: %s" format record)
     record
   }
 
   def all = {
     val all = Todo.findAll
-    debug("Records: %s" format all)
+    debug("records: %s" format all)
     all
   }
 
   def allAsJson = {
     val all = Todo.findAll.map(_.asJValue)
-    debug("Records: %s" format all)
+    debug("records: %s" format all)
     compact(render(JArray(all)))
   }
 
   def remove(id: String) = {
     val query  = Todo where (_.id eqs new ObjectId(id)) get
     val record = query.get
-    debug("Record: %s" format record)
+    debug("record %s" format record)
     record.delete_!
   }
 }
