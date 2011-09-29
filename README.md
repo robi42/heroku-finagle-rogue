@@ -19,7 +19,7 @@ Then point your browser to this URL:
 
   http://localhost:5000/
 
-Note: you need to build `dependencies.jar` before (see below).
+Note: you need to build before (see below).
 
 To compile + package Scala on-the-fly <br>
 via `sbt` [0.10]:
@@ -29,7 +29,7 @@ via `sbt` [0.10]:
 
 For compiling/packaging once just leave off the `~`.
 
-To make an assembly of all `sbt` project lib dependencies (-> `dependencies.jar`):
+To make an assembly of all `sbt` project lib dependencies:
 
     $ sbt
     > assembly:package-dependency

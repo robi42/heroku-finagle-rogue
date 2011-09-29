@@ -18,7 +18,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   "ch.qos.logback"      %  "logback-classic"     % "0.9.29",
-  "com.twitter"         %  "finagle-http"        % "1.9.0",
+  "com.twitter"         %  "finagle-http"        % "1.9.1",
   "com.foursquare"      %% "rogue"               % "1.0.22" intransitive(),
   "net.liftweb"         %% "lift-mongodb-record" % "2.4-M2",
   "com.codahale"        %% "simplespec"          % "0.3.4" % "test->default"
