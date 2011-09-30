@@ -1,39 +1,29 @@
 package com.robert42.ft
 
-import org.jboss.netty.handler.codec.http.DefaultHttpResponse
-import org.jboss.netty.handler.codec.http.
-  {HttpHeaders => Headers, HttpResponseStatus => Status}
 import org.jboss.netty.handler.codec.http.HttpHeaders.Names._
 import org.jboss.netty.handler.codec.http.HttpHeaders.Values._
-import org.jboss.netty.handler.codec.http.HttpResponseStatus._
-import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1
 import org.jboss.netty.buffer.ChannelBuffers.copiedBuffer
 import org.jboss.netty.util.CharsetUtil.UTF_8
+import com.twitter.finagle.http.Response
+import com.twitter.finagle.http.Status._
+import com.twitter.finagle.http.Version.Http11
 import java.io.ByteArrayOutputStream
 import java.util.zip.GZIPOutputStream
 
 object Responses {
-  def status(status: Status) = new DefaultHttpResponse(HTTP_1_1, status)
-
   def json(data: String, gzip: Boolean = false) = {
-    val response    = status(OK)
-    val contentType = "application/json; charset=%s"
-      .format(UTF_8.toString.toLowerCase)
-    response.setHeader(CONTENT_TYPE, contentType)
+    val response = Response()
+    response.setContentTypeJson
     if (gzip) response.setHeader(CONTENT_ENCODING, GZIP)
-    response setContent content(data, gzip)
-    Headers.setContentLength(response, response.getContent.readableBytes)
+    response.content = content(data, gzip)
     response
   }
 
   def error(info: String, gzip: Boolean = false) = {
-    val response    = status(INTERNAL_SERVER_ERROR)
-    val contentType = "text/plain; charset=%s"
-      .format(UTF_8.toString.toLowerCase)
-    response.setHeader(CONTENT_TYPE, contentType)
+    val response = Response(Http11, InternalServerError)
+    response.mediaType = "text/plain"
     if (gzip) response.setHeader(CONTENT_ENCODING, GZIP)
-    response setContent content(info, gzip)
-    Headers.setContentLength(response, response.getContent.readableBytes)
+    response.content = content(info, gzip)
     response
   }
 

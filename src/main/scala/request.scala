@@ -6,7 +6,7 @@ import com.twitter.finagle.http.Request
 
 object Requests {
   def acceptsGzip(request: Request) =
-    if (request.getHeader(ACCEPT_ENCODING) != null)
-      request.getHeader(ACCEPT_ENCODING).contains(GZIP)
+    if (request.containsHeader(ACCEPT_ENCODING))
+      request.getHeader(ACCEPT_ENCODING).split(",").contains(GZIP)
     else false
 }
