@@ -3,6 +3,7 @@ package com.robert42.ft
 import net.liftweb.mongodb.record._
 import net.liftweb.mongodb.record.field._
 import net.liftweb.record.field._
+import net.liftweb.record.LifecycleCallbacks
 import net.liftweb.json.JsonDSL._
 
 // Model definitions.
@@ -11,7 +12,13 @@ class Todo private() extends MongoRecord[Todo] with ObjectIdPk[Todo]
                                                with JsonSerializable[Todo] {
   def meta = Todo
 
-  object text  extends StringField(this, 12)
+  private lazy val cache = Memcached.cache
+  private def clearCache = cache delete "todos"
+
+  object text extends StringField(this, 12) with LifecycleCallbacks {
+    override def afterSave   = clearCache
+    override def afterDelete = clearCache
+  }
   object order extends LongField(this)
   object done  extends BooleanField(this)
 }

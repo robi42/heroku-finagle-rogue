@@ -12,12 +12,14 @@ mainClass in (Compile, packageBin) := Some("com.robert42.ft.RestServer")
 resolvers ++= Seq(
   "scala-tools" at "http://nexus.scala-tools.org/content/repositories/public",
   "java.net"    at "http://download.java.net/maven/2/",
+  "memcached"   at "http://files.couchbase.com/maven2/",
   "codahale"    at "http://repo.codahale.com",
   "twttr"       at "http://maven.twttr.com"
 )
 
 libraryDependencies ++= Seq(
   "ch.qos.logback"      %  "logback-classic"     % "0.9.29",
+  "spy"                 %  "spymemcached"        % "2.6",
   "com.twitter"         %  "finagle-http"        % "1.9.1",
   "com.foursquare"      %% "rogue"               % "1.0.22" intransitive(),
   "net.liftweb"         %% "lift-mongodb-record" % "2.4-M2",

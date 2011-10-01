@@ -1,6 +1,7 @@
 package com.robert42.ft
 
 import TodoXmlData._
+import com.twitter.conversions.time._
 import net.liftweb.record.Record
 import net.liftweb.json._
 import net.liftweb.json.Serialization.read
@@ -11,6 +12,9 @@ import java.util.Calendar
 
 // Persistence layer interface.
 object Todos extends Storable {
+  private lazy val cache = Memcached.cache
+  private lazy val todos = "todos"
+
   def fromJson(json: String, create: Boolean, update: Boolean) = {
     if (create)
       createFromJson(read[TodoCreateJson](json))
@@ -75,15 +79,20 @@ object Todos extends Storable {
   }
 
   def all = {
-    val all = Todo.findAll
-    debug("records: %s" format all)
-    all
+    val records = Todo.findAll
+    debug("records: %s" format records)
+    records
   }
 
   def allAsJson = {
-    val all = Todo.findAll.map(_.asJValue)
-    debug("records: %s" format all)
-    compact(render(JArray(all)))
+    val cached = cache get todos
+    val json   = if (cached != null) cached.toString else {
+      val data = compact(render(JArray(Todo.findAll.map(_.asJValue))))
+      cache.set(todos, 7.days.inMillis.toInt, data)
+      data
+    }
+    debug("JSON: %s" format json)
+    json
   }
 
   def remove(id: String) = {

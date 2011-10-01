@@ -10,6 +10,10 @@ The app's persistence layer depends on [MongoDB], so start it:
 
     $ mongod
 
+Additionally, [Memcached] is being used, so e.g.:
+
+    $ memcached -vv
+
 To run the app locally via `foreman`:
 
     $ gem install foreman
@@ -55,9 +59,10 @@ Then, make the project's lib dependencies JAR (via `sbt assembly:package-depende
     $ heroku open
 
 
-  [Scala]:   http://www.scala-lang.org/
-  [Heroku]:  http://www.heroku.com/
-  [Finagle]: http://twitter.github.com/finagle/
-  [Rogue]:   http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/
-  [MongoDB]: http://www.mongodb.org/
-  [0.10]:    https://github.com/harrah/xsbt/wiki/Setup
+  [Scala]:     http://www.scala-lang.org/
+  [Heroku]:    http://www.heroku.com/
+  [Finagle]:   http://twitter.github.com/finagle/
+  [Rogue]:     http://engineering.foursquare.com/2011/01/21/rogue-a-type-safe-scala-dsl-for-querying-mongodb/
+  [MongoDB]:   http://www.mongodb.org/
+  [Memcached]: http://memcached.org/
+  [0.10]:      https://github.com/harrah/xsbt/wiki/Setup
