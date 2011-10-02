@@ -85,11 +85,13 @@ object Todos extends Storable {
   }
 
   def allAsJson = {
-    val cached = cache get todos
-    val json   = if (cached != null) cached.toString else {
-      val data = compact(render(JArray(Todo.findAll.map(_.asJValue))))
-      cache.set(todos, 7.days.inMillis.toInt, data)
-      data
+    val json = Option(cache get todos) match {
+      case Some(cached) => cached.toString
+      case None => {
+        val data = compact(render(JArray(Todo.findAll.map(_.asJValue))))
+        cache.set(todos, 7.days.inMillis.toInt, data)
+        data
+      }
     }
     debug("JSON: %s" format json)
     json

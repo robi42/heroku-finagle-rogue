@@ -95,8 +95,10 @@ object RestServer extends Logger {
 
     // Compose the Filters and Service together:
     val service = handleExceptions andThen respond
-    val envPort = System getenv "PORT"
-    val port    = if (envPort != null) envPort.toInt else 8888
+    val port    = Option(System getenv "PORT") match {
+      case Some(port) => port.toInt
+      case None       => 8888
+    }
     val server  = ServerBuilder()
       .codec(RichHttp[Request](Http()))
       .bindTo(new InetSocketAddress(port))
