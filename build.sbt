@@ -19,7 +19,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   "ch.qos.logback"      %  "logback-classic"     % "0.9.29",
-  "spy"                 %  "spymemcached"        % "2.6",
+  "spy"                 %  "spymemcached"        % "2.7.1",
   "com.twitter"         %  "finagle-http"        % "1.9.1",
   "com.foursquare"      %% "rogue"               % "1.0.22" intransitive(),
   "net.liftweb"         %% "lift-mongodb-record" % "2.4-M2",
