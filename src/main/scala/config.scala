@@ -18,12 +18,10 @@ object MongoConfig extends Logger {
       case Props.RunModes.Production => {
         val pw = Props.get("mongo.pw", "")
         MongoDB.defineDbAuth(
-          DefaultMongoIdentifier, new Mongo(server), name, name, pw
-        )
+          DefaultMongoIdentifier, new Mongo(server), name, name, pw)
       }
       case _ => MongoDB.defineDb(
-        DefaultMongoIdentifier, new Mongo(server), name
-      )
+        DefaultMongoIdentifier, new Mongo(server), name)
     }
     info("MongoDB config init.")
   }
