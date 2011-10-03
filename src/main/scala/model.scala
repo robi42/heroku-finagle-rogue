@@ -24,7 +24,7 @@ class Todo private() extends MongoRecord[Todo] with ObjectIdPk[Todo]
 }
 
 object Todo extends Todo with MongoMetaRecord[Todo] {
-  ensureIndex(("order" -> 1), true)
+  ensureIndex("order" -> 1, true)
 }
 
 // For JSON serialization.
